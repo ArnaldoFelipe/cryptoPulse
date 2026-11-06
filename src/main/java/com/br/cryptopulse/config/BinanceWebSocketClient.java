@@ -3,24 +3,17 @@ package com.br.cryptopulse.config;
 import com.br.cryptopulse.dto.BinanceTradeDTO;
 import com.br.cryptopulse.entities.TradeEvent;
 import com.br.cryptopulse.repository.TradeEventRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.client.WebSocketClient;
-import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import tools.jackson.databind.ObjectMapper;
-
-
-import java.math.BigDecimal;
 
 @Component
 @RequiredArgsConstructor
 public class BinanceWebSocketClient extends TextWebSocketHandler {
-
-    private final String BINANCE_WS_URL = "wss://stream.binance.com:9443/ws/btcusdt@trade";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final TradeEventRepository tradeEventRepository;
@@ -40,14 +33,8 @@ public class BinanceWebSocketClient extends TextWebSocketHandler {
 
             tradeEventRepository.save(event);
         }catch (Exception e){
-            throw new RuntimeException(e.getMessage());
+            System.err.println("Erro ao salvar trade: " + e.getMessage());
         }
-    }
-
-    @PostConstruct
-    public void iniciarConexao(){
-        WebSocketClient client = new StandardWebSocketClient();
-        client.execute(this, BINANCE_WS_URL);
     }
 
 }

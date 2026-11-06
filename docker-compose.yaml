@@ -1,14 +1,26 @@
 services:
   mongodb:
     image: mongo:latest
-    container_name: mongodb
+    container_name: mongodb_crypto
     environment:
       MONGO_INITDB_ROOT_USERNAME: user
       MONGO_INITDB_ROOT_PASSWORD: user
     ports:
       - "27017:27017"
     volumes:
-      - mongo_data:/data/db
+      - mongo_data_crypto:/data/db
 
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana_crypto
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=yesoreyeram-infinity-datasource
 volumes:
-  mongo_data:
+  mongo_data_crypto:

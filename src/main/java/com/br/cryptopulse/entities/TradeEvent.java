@@ -5,8 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 @Data
 @Builder
@@ -22,4 +24,8 @@ public class TradeEvent {
     private BigDecimal preco;
     private BigDecimal quantidade;
     private Long timestamp;
+
+    @Indexed(expireAfter = "24h")
+    @Builder.Default
+    private Instant dataCriacao = Instant.now();
 }
